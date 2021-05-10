@@ -12,5 +12,6 @@ app.listen(process.env.PORT, () => {
 });
 
 app.get('/', (req,res,next) => {
-	res.send(req.connection.remoteAddress);
+	var ip = req.headers['x-forwarded-for'] ? req.headers['x-forwarded-for'].split(',')[0] : req.connection.remoteAddress;
+	res.send(ip);
 });
