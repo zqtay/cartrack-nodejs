@@ -1,5 +1,5 @@
 {
-  "name": "cartrack",
+  "name": "cartrack-nodejs",
   "version": "1.0.0",
   "engines": {
     "node": "12.16.2"
@@ -7,13 +7,15 @@
   "description": "Cartrack NodeJS challenge",
   "main": "app.js",
   "scripts": {
+    "build": "babel views/assets/js/src -d views/assets/js/dist",
     "test": "node test/app.test.js"
   },
   "author": "zqtay",
   "license": "ISC",
   "dependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-preset-react-app": "^3.1.2",
+    "@babel/cli": "^7.13.16",
+    "@babel/core": "^7.14.2",
+    "@babel/preset-react": "^7.13.13",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "dotenv": "^9.0.1",
