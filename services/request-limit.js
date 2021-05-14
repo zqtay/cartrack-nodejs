@@ -43,16 +43,16 @@ const REQUEST_LIMIT_BLOCK_DURATION = process.env.REQUEST_LIMIT_BLOCK_DURATION * 
 
 var reqUserList = {};
 /*	Each reqUser entry will be 
-*	'0.0.0.0':{currWindowTime:0, lastCount:0, currCount:0, level:0, levelTimeEnd: 0}	
+*	'0.0.0.0':{currWindowTime:0, lastCount:0, currCount:0, level:0, levelEndTime: 0}	
 *
 */
 
-function reqUserInit(currWindowTime, lastCount, currCount, level, levelTimeEnd){
+function reqUserInit(currWindowTime, lastCount, currCount, level, levelEndTime){
 	return {currWindowTime:currWindowTime, 
 			lastCount:lastCount, 
 			currCount:currCount, 
 			level:level, 
-			levelTimeEnd: levelTimeEnd};
+			levelEndTime: levelEndTime};
 }
 
 function reqLimitCheck(req, callback){
@@ -80,7 +80,7 @@ function reqLimitCheck(req, callback){
 			}
 			else {
 				reqUser.level = REQUEST_LIMIT_LEVEL_RESTRICT;	//Increase one level
-				reqUser.levelTimeEnd = currTime + REQUEST_LIMIT_RESTRICT_DURATION;
+				reqUser.levelEndTime = currTime + REQUEST_LIMIT_RESTRICT_DURATION;
 				reqUserList[ip] = reqUser;
 				result = false;
 			}
@@ -88,22 +88,22 @@ function reqLimitCheck(req, callback){
 		}
 		case REQUEST_LIMIT_LEVEL_RESTRICT: {
 			if(reqLimitCalc(reqUser, REQUEST_LIMIT_RESTRICT_WINDOW, REQUEST_LIMIT_RESTRICT_COUNT, currTime)){
-				if (currTime >= reqUser.levelTimeEnd){
-					reqUser.level--; //Drop to normal
+				if (currTime >= reqUser.levelEndTime){
+					reqUser.level = REQUEST_LIMIT_LEVEL_NORMAL; //Drop to normal
 				}
 				reqUserList[ip] = reqUser;
 				result = true;
 			}
 			else {
 				reqUser.level = REQUEST_LIMIT_LEVEL_BLOCK;	//Increase one level
-				reqUser.levelTimeEnd = currTime + REQUEST_LIMIT_BLOCK_DURATION;
+				reqUser.levelEndTime = currTime + REQUEST_LIMIT_BLOCK_DURATION;
 				reqUserList[ip] = reqUser;
 				result = false;
 			}
 			break;
 		}
 		case REQUEST_LIMIT_LEVEL_BLOCK: {
-			if (currTime >= reqUser.levelTimeEnd){ 
+			if (currTime >= reqUser.levelEndTime){ 
 				reqUser.level = REQUEST_LIMIT_LEVEL_NORMAL;
 				reqUserList[ip] = reqUser;
 				result = true;

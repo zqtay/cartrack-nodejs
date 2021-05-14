@@ -41,9 +41,9 @@ app.use('/api/random',(req, res, next) => {
 app.get('/api/random', (req,res,next) => {
 	setTimeout(()=>{
 		var data = {};
-		data.data = ('0000'+Math.floor(Math.random() * 10000)).slice(-4);
+		data.random = ('0000'+Math.floor(Math.random() * 10000)).slice(-4);
 		res.send({data:data, reqLimit:res.locals.reqLimit});
-	},50); //This is to simulate time elapsed to get data from database/file storage
+	},500); //This is to simulate time elapsed to get data from database/file storage
 });
 
 app.get('*', (req, res) => {
