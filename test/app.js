@@ -1,48 +1,57 @@
-var chai = require('chai');
-var chaiHttp = require('chai-http');
-var server = require('../app');
-var should = chai.should();
+var server = require("../app");
+var chai = require("chai");
+var chaiHttp = require("chai-http");
+var dotenv = require('dotenv');
 
-chai.use(chaiHttp);
+dotenv.config();
+const REQUEST_LIMIT_NORMAL_COUNT = process.env.REQUEST_LIMIT_NORMAL_COUNT
 
-before(done => {
-	setTimeout(done, 5000);
-	// server.on("ready", () => {
-		// done();
-	// })
-})
+// Assertion 
+chai.should();
+chai.use(chaiHttp); 
 
 describe('App test', () => {
-	//Wait for server to be up
 
-	describe('GET /', () => {
-		it('it should GET landing page', (done) => {
-			chai.request(server)
-            .get('/')
-            .end((err, res) => {
-				console.log(res);
-				res.should.have.status(200);
-				res.headers['content-type'].to.have.string('text/html');
-				done();
-			});
-		});
+    describe("GET /", () => {
+        it("It should GET landing page", async () => {
+            var res = await chai.request(server).get("/")
+			res.should.have.status(200);
+			res.headers['content-type'].should.have.string('text/html');
+        });
 	});
 	
-	describe('GET /api/random', () => {
-		it('it should GET data and reqLimit', (done) => {
-			chai.request(server)
-            .get('/api/random')
-            .end((err, res) => {
-				res.should.have.status(200);
-				res.headers['content-type'].to.have.string('application/json');
-				console.log(res);
-				done();
-			});
-		});
-	});
+	describe("GET /api/random", () => {
+        it("It should GET data", (done) => {
+            chai.request(server)
+                .get("/api/random")
+                .end((err, response) => {
+                    response.should.have.status(200);
+                done();
+                });
+        });
+    });
 	
-	afterEach(function(){
-		server.close();
-	})
+	//Request limit
+	describe("GET /api/random", () => {
+        it("It should error 403", async () => {
+			for (var i = 0; i < REQUEST_LIMIT_NORMAL_COUNT; i++){
+				await chai.request(server).get("/api/random");
+			}
+            var res = await chai.request(server).get("/api/random")
+			res.should.have.status(403);
+        });
+    });
 	
+	//Non-existing route
+	describe("GET /routenotexist", () => {
+        it("It should error 404", (done) => {
+            chai.request(server)
+                .get("/routenotexist")
+                .end((err, response) => {
+                    response.should.have.status(404);
+                done();
+                });
+        });
+    });
+
 });
