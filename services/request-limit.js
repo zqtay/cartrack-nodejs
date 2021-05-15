@@ -118,7 +118,9 @@ function reqLimitCheck(req, callback){
 			break;				
 		}
 	}
-	callback(null, {result:result, record:reqUser});
+	
+	console.log(`${new Date(currTime).toISOString()}: ${ip} ${req.protocol} ${req.method} ${req.originalUrl} ${JSON.stringify({result:result, record:reqUser})}`);
+	callback(null, {result:result, ip:ip, record:reqUser});
 }
 
 function reqLimitCalc(reqUser, limitWindow, limitCount, currTime){

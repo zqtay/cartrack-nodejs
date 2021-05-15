@@ -2,8 +2,10 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: '',
-      status: `Click 'Randomise' to request for a random 4-digit number!`
+      data: 'XXXX',
+      status: `Click 'Randomize' to request for a random 4-digit number!`,
+      disabled: false,
+      buttonText: 'Randomize'
     };
     this.getRandom = this.getRandom.bind(this);
   }
@@ -14,7 +16,8 @@ class App extends React.Component {
     }
 
     this.setState({
-      disabled: true
+      disabled: true,
+      buttonText: 'Processing...'
     }); //Prevent multiclicking
 
     fetch('/api/random').then(response => response.json()).then(result => {
@@ -30,12 +33,15 @@ class App extends React.Component {
       });
       console.log(result);
       this.setState({
-        disabled: false
+        disabled: false,
+        buttonText: 'Randomize'
       });
     }).catch(error => {
       console.error(error);
       this.setState({
-        disabled: false
+        status: 'Something went wrong.',
+        disabled: false,
+        buttonText: 'Randomize'
       });
     });
   }
@@ -56,26 +62,26 @@ class App extends React.Component {
       class: "btn btn-primary btn-lg px-4 me-sm-3",
       onClick: this.getRandom,
       disabled: this.state.disabled
-    }, "Randomize"))));
+    }, this.state.buttonText))));
   }
 
 }
 
 function reqLimitString(reqLimit) {
   var s = '';
-  if (reqLimit.result === true) s += `Request successful!`;else if (reqLimit.result === false) s += `Request failed!`;
+  if (reqLimit.result === true) s += `Request successful!`;else if (reqLimit.result === false) s += `Request limit reached!`;
 
   switch (reqLimit.record.level) {
     //User request limit level
     case 1:
       {
-        s += ` Your IP is restricted until ${new Date(reqLimit.record.levelEndTime).toLocaleString()}.`;
+        s += ` Your IP ${reqLimit.ip} is restricted until ${new Date(reqLimit.record.levelEndTime).toLocaleString()}.`;
         break;
       }
 
     case 2:
       {
-        s += ` Your IP is blocked until ${new Date(reqLimit.record.levelEndTime).toLocaleString()}.`;
+        s += ` Your IP ${reqLimit.ip} is blocked until ${new Date(reqLimit.record.levelEndTime).toLocaleString()}.`;
         break;
       }
 
