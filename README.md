@@ -11,11 +11,11 @@ The request limiter is using sliding window algorithm. Further clarification ple
 ``BLOCK``: All requests from the user are denied. If the BLOCK duration has passed, go to ``NORMAL``.  
 
 ## Setup  
-Git clone:
+Git clone:  
 ``git clone https://github.com/zqtay/cartrack-nodejs``  
-Directory:
-``cd cartrack-nodejs``:  
-Install depedencies:
+Directory:  
+``cd cartrack-nodejs``  
+Install depedencies:  
 ``npm install``  
 
 ## Config
@@ -27,5 +27,5 @@ Note that request window is in seconds. ``REQUEST_LIMIT_NORMAL_WINDOW=60`` means
 By default: the server is listening on ``http://localhost:3000``  
 
 ## Test
-Run unit test from ``mocha``:
+Run unit test from ``mocha``:  
 ``npm run test``
