@@ -19,6 +19,7 @@ app.use(express.static('views'));
 
 app.listen(PORT, () => {
     console.log(`${new Date().toISOString()}: Server is running on port ${process.env.PORT}`);
+	app.emit("ready");
 });
 
 //Landing page

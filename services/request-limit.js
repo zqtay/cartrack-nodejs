@@ -27,7 +27,7 @@ dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 /*	3 levels of request limiting 
 *	NORMAL: Normal, if the request rate exceeds the limit, go to RESTRICT.
-*	RESTRICT: Restrict the number of allowable request from the user. If user exceeds this limit, go to BAN. If the RESTRICT duration has passed, go to NORMAL.
+*	RESTRICT: Restrict the number of allowable request from the user. If user exceeds this limit, go to BLOCK. If the RESTRICT duration has passed, go to NORMAL.
 *	BLOCK: All requests from the user are denied. If the BLOCK duration has passed, go to NORMAL.
 */
 

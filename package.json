@@ -8,7 +8,7 @@
   "main": "app.js",
   "scripts": {
     "build": "babel views/assets/js/src -d views/assets/js/dist",
-    "test": "node test/app.test.js"
+    "test": "mocha --timeout 10000"
   },
   "author": "zqtay",
   "license": "ISC",
